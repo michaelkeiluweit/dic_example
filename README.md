@@ -42,14 +42,16 @@ $c = new C(D $d, E $e);
 $a = new A(B $b, C $c);
 ```
 But what happens if it is a new requirement that object B must have also a parameter during the initialization of the object?  
-You have to go through the complete code basis and check if somewhere the object B was initiated and change that place. You also have to make sure,
+You have to go through the complete code basis and check if somewhere the object B was initiated and change that place. 
+You also have to make sure,
 that you have the needed information for the new parameter at each place. This becomes a mess in no time.  
   
 Here comes the Dependency Injection Container in handy.
   
-By giving the type declaration in method signatures, the Dependency Injection Container (DI Container) knows exactly which object is meant to be injected.
-The DI Container reads the code and gathers the information it needs, to build the objects for you. Given by the example from above, 
-the code would look like this:
+By giving the type declaration in method signatures, the Dependency Injection Container (DI Container) knows exactly 
+which object is meant to be injected.
+The DI Container reads the code and gathers the information it needs, to build the objects for you. Given by the example 
+from above, the code would look like this:
 ```php
 $a = ContainerFactory::getContainer()->get(A);
 ```
@@ -61,10 +63,11 @@ When you build the DI Container adapter of your application, you tell the DI Con
 In this project the first YAML file is located in `src/Container/services.yaml`. Don't get confused it doesn't contain
 any details about the objects, but it requires another services.yaml, but why is that?  
   
-The answer is simple: Imagine a big project, with lots of directories. Here a new object is introduced, there gets an object removed.
-You would have to change the service.yaml file every time and it would also huge and probably a mess. Therefore each sub-directory
-(given, you are using a design pattern with some sort of Domain Driven Design) has its very own service.yaml file which knows about all
-the stuff in its directory. Check the file `src/Http/services.yaml` for example. It knows only about the objects in the directory `Http/`.
+The answer is simple: Imagine a big project, with lots of directories. Here a new object is introduced, there gets an 
+object removed. You would have to change the service.yaml file every time, and it would be also huge and probably a mess.
+Therefore, each sub-directory (given, you are using a design pattern with some sort of Domain Driven Design) has its very 
+own service.yaml file which knows about all the stuff in its directory. Check the file `src/Http/services.yaml` for example. 
+It knows only about the objects in the directory `Http/`.
 
 ### Configuration
 The DI Container knows only to states: The object is via the container callable or not.  
@@ -84,7 +87,7 @@ $a = ContainerFactory::getContainer()->get(A);
 This would lead to such an error: 
 > The "A" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.
  
-Typically, you find such a configuration for Service objects. They aren't meant to be called outside of the 
+Typically, you find such a configuration for Service objects. They aren't meant to be called outside the 
 controllers.  To be able to use the object A you would have to require it in a constructor:
 ```php
 class Example {
