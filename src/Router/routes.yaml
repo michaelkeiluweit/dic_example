@@ -1,0 +1,15 @@
+_default:
+    namespace: MichaelKeiluweit\DicExample\Http\Controller\Frontpage\FrontpageController
+    action: index
+
+f:
+    namespace: MichaelKeiluweit\DicExample\Http\Controller\Frontpage\FrontpageController
+    action: index
+
+ft:
+    namespace: MichaelKeiluweit\DicExample\Http\Controller\Frontpage\FrontpageWithTemplateController
+    action: index
+
+fta:
+    namespace: MichaelKeiluweit\DicExample\Http\Controller\Frontpage\FrontpageWithAdvancedTemplateController
+    action: index

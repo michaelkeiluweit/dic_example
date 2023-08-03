@@ -1,0 +1,17 @@
+services:
+
+    _defaults:
+        public: false
+        autowire: true
+
+    MichaelKeiluweit\DicExample\Http\:
+        resource: '*'
+
+    MichaelKeiluweit\DicExample\Http\Controller\Frontpage\FrontpageController:
+        public: true
+
+    MichaelKeiluweit\DicExample\Http\Controller\Frontpage\FrontpageWithTemplateController:
+        public: true
+
+    MichaelKeiluweit\DicExample\Http\Controller\Frontpage\FrontpageWithAdvancedTemplateController:
+        public: true

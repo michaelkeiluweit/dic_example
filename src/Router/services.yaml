@@ -1,0 +1,11 @@
+services:
+
+    _defaults:
+        public: false
+        autowire: true
+
+    MichaelKeiluweit\DicExample\Router\:
+        resource: '*'
+
+    MichaelKeiluweit\DicExample\Router\Router:
+        public: true
