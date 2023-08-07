@@ -17,7 +17,7 @@ A simple project to demonstrate the basic usage of Symfony's Dependency Injectio
 - Make sure the directory `cache/` is writeable for the webserver.
 
 ## Usage
-Call the app by our choosen domain, e.g. https://localhost.
+Call the app by your choosen domain, e.g. https://localhost.
 The three different Controllers are callable by:
 - f
 - ft
@@ -50,53 +50,53 @@ Here comes the Dependency Injection Container in handy.
   
 By giving the type declaration in method signatures, the Dependency Injection Container (DI Container) knows exactly 
 which object is meant to be injected.
-The DI Container reads the code and gathers the information it needs, to build the objects for you. Given by the example 
+The DI Container reads the code and gathers the information it needs to build the objects for you. Given by the example 
 from above, the code would look like this:
 ```php
-$a = ContainerFactory::getContainer()->get(A);
+$a = ContainerFactory::getContainer()->get(A::class);
 ```
 You would have a complete initialized object of type A. 
 
 ### Organization
 But how does the DI Container knows where to search at?  
-When you build the DI Container adapter of your application, you tell the DI Container where it should search by a YAML file.  
+When you build the DI Container adapter of your application, you tell the DI Container where it should search for the services by a YAML file.  
 In this project the first YAML file is located in `src/Container/services.yaml`. Don't get confused it doesn't contain
 any details about the objects, but it requires another services.yaml, but why is that?  
   
 The answer is simple: Imagine a big project, with lots of directories. Here a new object is introduced, there gets an 
-object removed. You would have to change the service.yaml file every time, and it would be also huge and probably a mess.
+object removed. You would have to change the service.yaml file every time, and it would also be huge and probably a mess.
 Therefore, each sub-directory (given, you are using a design pattern with some sort of Domain Driven Design) has its very 
 own service.yaml file which knows about all the stuff in its directory. Check the file `src/Http/services.yaml` for example. 
 It knows only about the objects in the directory `Http/`.
 
 ### Configuration
-The DI Container knows only to states: The object is via the container callable or not.  
-To be able what that means we have to dig a bit deeper.   
+The DI Container knows only two states: Either the object is via the container callable or not.  
+To understand what that means we have to dig a bit deeper.   
 
 In some cases you don't want that your object is callable by the DI container. In that case
-you have to set the value of the parameter public to false. Using the example from above, with this services.yaml file for
+you have to set the value of the parameter public to false. Using the example from the introducing, the services.yaml file must contain that for
 the object A:
 ```yaml
 A:
     public: false
 ```
-It wouldn't be possible to call the object with the DI Container from the outside:
+Now, it wouldn't be possible to call the object with the DI Container from the outside:
 ```php
-$a = ContainerFactory::getContainer()->get(A);
+$a = ContainerFactory::getContainer()->get(A::class);
 ```
 This would lead to such an error: 
 > The "A" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.
  
 Typically, you find such a configuration for Service objects. They aren't meant to be called outside the 
-controllers.  To be able to use the object A you would have to require it in a constructor:
+controllers or from somewhere else. To be able to use the object A you would have to require it in a constructor:
 ```php
 class Example {
     public function __construct(private A $a)
 }
 ```
-When you call the object Example through the DI Container:
+When you call the object `Example` through the DI Container:
 ```php
-$example = ContainerFactory::getContainer()->get(Example);
+$example = ContainerFactory::getContainer()->get(Example::class);
 ```
 then the DI Container would create the object A, inject it into Example and you would have a ready to go
 object of type Example.
