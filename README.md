@@ -23,7 +23,7 @@ The three different Controllers are callable by:
 - ft
 - fta
  
-Example: `https://localhost/f`
+Example: `https://localhost?f`
 
 See `src/Router/routes.yaml` for further information.
 
