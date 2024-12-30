@@ -98,8 +98,19 @@ When you call the object `Example` through the DI Container:
 ```php
 $example = ContainerFactory::getContainer()->get(Example::class);
 ```
-then the DI Container would create the object A, inject it into Example and you would have a ready to go
+then the DI Container would create the object A, inject it into Example and you get a ready to go
 object of type Example.
+
+### Interfaces
+What happens if an object must be swapped? Let's say from our example, the object A needs object X instead of C. It would be necessary to edit the class A and change the method's header. Or think of a scenario, in which a sandbox must send information to stoud, but on live it must be broadcasted to an emergency chat or mobile phone.
+
+Instead of addressing specific objects, it's more valueable to use interfaces. Interfaces are a placeholder. The object, the interface gets swapped by, is defined in a services.yaml:
+```
+services:
+    App\LogInterface:
+        class: App\TxtLogger
+```
+You would be able to switch the class parameter depending on the environment context. On the sandbox it is `App\TxtLogger` and on live it could be `App\SmsLogger`.
 
 ## Resources
 For further information I strongly recommend to check out the [documentation of Symfony](https://symfony.com/doc/current/service_container.html) itself and to write own services, injecting them make the private or public, build dependencies and so on.
