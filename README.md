@@ -42,11 +42,10 @@ $c = new C(D $d, E $e);
 $a = new A(B $b, C $c);
 ```
 But what happens if it is a new requirement that object B must have also a parameter during the initialization of the object?  
-You have to go through the complete code basis and check if somewhere the object B was initiated and change that place. 
-You also have to make sure,
-that you have the needed information for the new parameter at each place. This becomes a mess in no time.  
+You have to go through the complete code and check if somewhere the object B was initiated and change that place. 
+You also have to make sure, that you have the needed information for the new parameter at each place. This becomes a mess in no time.  
   
-Here comes the Dependency Injection Container in handy.
+The Dependency Injection Container comes in handy for automatically setting dependencies.
   
 By giving the type declaration in method signatures, the Dependency Injection Container (DI Container) knows exactly 
 which object is meant to be injected.
@@ -59,13 +58,11 @@ You would have a complete initialized object of type A.
 
 ### Organization
 But how does the DI Container knows where to search at?  
-When you build the DI Container adapter of your application, you tell the DI Container where it should search for the services by a YAML file.  
+When you build the DI Container adapter for your application, you tell the DI Container by a YAML file where it must search for the services.  
 In this project the first YAML file is located in `src/Container/services.yaml`. Don't get confused it doesn't contain
-any details about the objects, but it requires another services.yaml, but why is that?  
+any details about the objects, but requires another services.yaml. That's just exemplary, that services.yaml files can be organized, too.
   
-The answer is simple: Imagine a big project, with lots of directories. Here a new object is introduced, there gets an 
-object removed. You would have to change the service.yaml file every time, and it would also be huge and probably a mess.
-Therefore, each sub-directory (given, you are using a design pattern with some sort of Domain Driven Design) has its very 
+In this example each sub-directory (given, you are using a design pattern with some sort of hexagonal architecture pattern / Ports and Adapters) has its very 
 own service.yaml file which knows about all the stuff in its directory. Check the file `src/Http/services.yaml` for example. 
 It knows only about the objects in the directory `Http/`.
 
@@ -98,19 +95,25 @@ When you call the object `Example` through the DI Container:
 ```php
 $example = ContainerFactory::getContainer()->get(Example::class);
 ```
-then the DI Container would create the object A, inject it into Example and you get a ready to go
-object of type Example.
+then the DI Container would create the object A, inject it into Example and you get a ready to go object of type Example.
 
 ### Interfaces
-What happens if an object must be swapped? Let's say from our example, the object A needs object X instead of C. It would be necessary to edit the class A and change the method's header. Or think of a scenario, in which a sandbox must send information to stoud, but on live it must be broadcasted to an emergency chat or mobile phone.
+What happens if an object must be swapped? Let's say from our example, the object A needs object X instead of C. It would be necessary to edit the class A and change the contructor's method header. Or think of a scenario, in which an object must send information to _stoud_ on sandbox, but on live it must be broadcasted to an emergency chat or mobile phone.
 
-Instead of addressing specific objects, it's more valueable to use interfaces. Interfaces are a placeholder. The object, the interface gets swapped by, is defined in a services.yaml:
+Instead of addressing specific objects and working directly in the code, it's easier to use interfaces as placeholder. So it's only necessary to edit or replace the file services.yaml and not working in the code directly.
+
+```php
+class A {
+    public function __construct(App\LetterInterface $letter) {}
+}
 ```
+
+```yaml
 services:
-    App\LogInterface:
-        class: App\TxtLogger
+    App\LetterInterface:
+        class: App\X
 ```
-You would be able to switch the class parameter depending on the environment context. On the sandbox it is `App\TxtLogger` and on live it could be `App\SmsLogger`.
+You would be able to switch the class parameter depending on the environment context. On the sandbox it is `App\X` and on live it could be `App\C`.
 
 ## Resources
 For further information I strongly recommend to check out the [documentation of Symfony](https://symfony.com/doc/current/service_container.html) itself and to write own services, injecting them make the private or public, build dependencies and so on.
